@@ -894,7 +894,7 @@ const getRoutineCount = async function (req, res) {
     let allDates = [];
     let results = [];
 
-    for (let i = 0; i < routines.length; i++) {
+    for (var i = 0; i < routines.length; i++) {
       var routine = routines[i];
       allDates = allDates.concat(routine.dates);
     }
@@ -933,7 +933,10 @@ const getRoutineCount = async function (req, res) {
           0
         );
 
+        let group = routinesInCategory[0].group;
+
         results.push({
+          group: group,
           category: categoryId,
           noOfRoutines: routinesInCategory.length,
           completedRoutines: completedRoutines.length,
@@ -1637,7 +1640,11 @@ const createPlayerRoutine = async function (req, res) {
     data.userId = userId;
     data.category = Categories;
 
-    var group = data.drill_id ? data.group : null || data.group ? data.group : null;
+    var group = data.drill_id
+      ? data.group
+      : null || data.group
+      ? data.group
+      : null;
 
     let messaging = admin.messaging();
     let allRoutines = await routineModel.find({ userId }).lean();
@@ -2454,6 +2461,36 @@ const GetTestExports = async function (req, res) {
     });
   }
 };
+//=====================[Get UserId and Token]=============
+const getUserToken = async function (req, res) {
+  try {
+    let email = req.body.email;
+
+    let getTokenAndId = await userModel.findOne({ email: email });
+    if (getTokenAndId == null) {
+      return res.status(200).send({
+        status: false,
+        message: "Get UserId And Token Successfully",
+        data: null,
+      });
+    } else {
+      let obj = {};
+      obj._id = getTokenAndId._id;
+      obj.token = getTokenAndId.token;
+
+      return res.status(200).send({
+        status: true,
+        message: "Get UserId And Token Successfully",
+        data: obj,
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   SnCPlayerLogin,
@@ -2513,5 +2550,5 @@ module.exports = {
   createPowerTest,
   createStrengthTest,
   createWorkout,
-  // updateQuestion
+  getUserToken,
 };

@@ -24,6 +24,7 @@ Router.get("/GetSnCTestCategory", battingController.GetTestCategory);
 Router.post("/updateCoachPassword", battingController.updateCoachPassword);
 Router.post("/createSnCPlayer", battingController.createSnCPlayer);
 Router.post("/SnCPlayerLogin", battingController.SnCPlayerLogin);
+Router.post("/getUserIdAndToken", battingController.getUserToken)
 Router.post(
   "/:userId/createInvites",
   commnMid.jwtValidation,
